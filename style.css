@@ -1,0 +1,52 @@
+.row {
+    text-align: center;
+}
+
+.card {
+    display: inline-block;
+    border: none;
+    width: 5rem;
+    height: 5rem;
+    background-color: antiquewhite;
+    cursor: pointer;
+}
+
+.card:hover {
+    border: 2px black solid;
+}
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.brown {
+    background-color: brown;
+}
+
+.skyblue {
+    background-color: skyblue;
+}
+
+.violet {
+    background-color: violet;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.hidden {
+    background-color: antiquewhite;
+}
