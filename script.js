@@ -56,7 +56,9 @@ function checkMatch() {
             clearInterval(timer);
             gameOver = true;
             document.getElementById('message').style.display = 'block';
+            document.getElementById('message').innerHTML = '<h3>Congratulations! You have completed the puzzle!</h3>';
             document.getElementById('points').textContent = `Points: ${points}`;
+            document.getElementById('startBtnContainer').style.display = 'block';
             return;
         }
         setTimeout(() => {
@@ -72,6 +74,7 @@ function checkMatch() {
         }, 1000);
     }
 }
+
 
 function resetCards() {
     firstCard = null;
