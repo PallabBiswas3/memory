@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 60;
+const timeLimitSeconds = 30;
 let timer;
 let gameOver = false;
 
@@ -53,11 +53,11 @@ function checkMatch() {
     if (firstCard.className === secondCard.className) {
         points += 2;
         if (points === maxPoints) {
-            clearInterval(timer);
             gameOver = true;
+            clearInterval(timer);
             document.getElementById('message').style.display = 'block';
             document.getElementById('message').innerHTML = '<h3>Congratulations! You have completed the puzzle!</h3>';
-            document.getElementById('points').textContent = `Points: ${points}`;
+            document.getElementById('points').textContent = `Points: 16`;
             document.getElementById('startBtnContainer').style.display = 'block';
             return;
         }
