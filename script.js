@@ -2,9 +2,14 @@ let firstCard = null;
 let secondCard = null;
 let canClick = true;
 
+let points = 0;
+const maxPoints = 16;
+const timeLimitSeconds = 10;
+let timer;
+let gameOver = false;
+
 const cards = document.querySelectorAll('.card');
 const colors = ['red', 'green', 'yellow', 'blue', 'brown', 'skyblue', 'violet', 'orange'];
-
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -13,7 +18,6 @@ function shuffle(array) {
     }
     return array;
 }
-
 
 function setColors() {
     const shuffledColors = shuffle(colors.concat(colors));
@@ -27,8 +31,9 @@ function setColors() {
         cards.forEach(card => card.classList.add('hidden'));
     }, 0);
 }
+
 function flipCard() {
-    if (!canClick) return;
+    if (!canClick || gameOver) return;
     if (this === firstCard) return;
 
     this.classList.remove('hidden');
@@ -46,6 +51,14 @@ function checkMatch() {
     canClick = false;
 
     if (firstCard.className === secondCard.className) {
+        points += 2;
+        if (points === maxPoints) {
+            clearInterval(timer);
+            gameOver = true;
+            document.getElementById('message').style.display = 'block'; // Show message
+            document.getElementById('points').textContent = `Points: ${points}`; // Display points
+            return;
+        }
         setTimeout(() => {
             firstCard.removeEventListener('click', flipCard);
             secondCard.removeEventListener('click', flipCard);
@@ -65,5 +78,61 @@ function resetCards() {
     secondCard = null;
     canClick = true;
 }
-window.addEventListener('load', setColors);
-cards.forEach(card => card.addEventListener('click', flipCard));
+
+function startTimer() {
+    let timeLeft = timeLimitSeconds;
+    updateTimerDisplay(timeLeft);
+    timer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft < 0) {
+            clearInterval(timer);
+            gameOver = true;
+            document.getElementById('message').style.display = 'block'; // Show message
+            document.getElementById('points').textContent = `Points: ${points}`; // Display points
+            return;
+        } else {
+            updateTimerDisplay(timeLeft);
+        }
+    }, 1000);
+}
+
+function resetGame() {
+    points = 0;
+    setColors();
+    document.getElementById('points').textContent = `Points: ${points}`; // Reset points display
+    document.getElementById('message').style.display = 'none'; // Hide message
+    document.getElementById('startBtnContainer').style.display = 'none'; // Hide restart button
+    clearInterval(timer); // Clear any existing timer
+    gameOver = false; // Reset game over state
+    startTimer(); // Start the timer again
+}
+
+function restartGame() {
+    resetGame();
+    if (!gameOver) {
+        document.getElementById('startBtnContainer').style.display = 'block'; // Show restart button
+        cards.forEach(card => {
+            card.addEventListener('click', flipCard); // Add event listener
+        });
+    }
+}
+
+function updateTimerDisplay(timeLeft) {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const formattedTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    document.getElementById('timer').textContent = formattedTime;
+}
+
+function startGame() {
+    resetGame();
+    cards.forEach(card => card.addEventListener('click', flipCard));
+    document.getElementById('startBtn').style.display = 'none'; // Hide the start button
+    canClick = true;
+    startTimer();
+}
+
+window.addEventListener('load', () => {
+    // Set the start button functionality
+    document.getElementById('startBtn').addEventListener('click', startGame);
+});
