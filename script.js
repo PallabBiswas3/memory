@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 120;
+const timeLimitSeconds = 60;
 let timer;
 let gameOver = false;
 
