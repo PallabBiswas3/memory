@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 10;
+const timeLimitSeconds = 120;
 let timer;
 let gameOver = false;
 
@@ -55,8 +55,8 @@ function checkMatch() {
         if (points === maxPoints) {
             clearInterval(timer);
             gameOver = true;
-            document.getElementById('message').style.display = 'block'; // Show message
-            document.getElementById('points').textContent = `Points: ${points}`; // Display points
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('points').textContent = `Points: ${points}`;
             return;
         }
         setTimeout(() => {
@@ -87,8 +87,8 @@ function startTimer() {
         if (timeLeft < 0) {
             clearInterval(timer);
             gameOver = true;
-            document.getElementById('message').style.display = 'block'; // Show message
-            document.getElementById('points').textContent = `Points: ${points}`; // Display points
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('points').textContent = `Points: ${points}`;
             return;
         } else {
             updateTimerDisplay(timeLeft);
@@ -99,22 +99,16 @@ function startTimer() {
 function resetGame() {
     points = 0;
     setColors();
-    document.getElementById('points').textContent = `Points: ${points}`; // Reset points display
-    document.getElementById('message').style.display = 'none'; // Hide message
-    document.getElementById('startBtnContainer').style.display = 'none'; // Hide restart button
-    clearInterval(timer); // Clear any existing timer
-    gameOver = false; // Reset game over state
-    startTimer(); // Start the timer again
+    document.getElementById('points').textContent = `Points: ${points}`;
+    document.getElementById('message').style.display = 'none';
+    document.getElementById('startBtnContainer').style.display = 'none';
+    clearInterval(timer);
+    gameOver = false;
+    startTimer();
 }
 
 function restartGame() {
-    resetGame();
-    if (!gameOver) {
-        document.getElementById('startBtnContainer').style.display = 'block'; // Show restart button
-        cards.forEach(card => {
-            card.addEventListener('click', flipCard); // Add event listener
-        });
-    }
+    window.location.reload();
 }
 
 function updateTimerDisplay(timeLeft) {
@@ -127,12 +121,12 @@ function updateTimerDisplay(timeLeft) {
 function startGame() {
     resetGame();
     cards.forEach(card => card.addEventListener('click', flipCard));
-    document.getElementById('startBtn').style.display = 'none'; // Hide the start button
+    document.getElementById('startBtn').style.display = 'none';
     canClick = true;
     startTimer();
 }
 
+
 window.addEventListener('load', () => {
-    // Set the start button functionality
     document.getElementById('startBtn').addEventListener('click', startGame);
 });
