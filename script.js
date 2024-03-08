@@ -59,6 +59,7 @@ function checkMatch() {
             document.getElementById('message').innerHTML = '<h3>Congratulations! You have completed the puzzle!</h3>';
             document.getElementById('points').innerHTML = `Points: 16`;
             document.getElementById('startBtnContainer').style.display = 'block';
+            resetGame() ;
             return;
         }
         setTimeout(() => {
