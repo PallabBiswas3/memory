@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 30;
+const timeLimitSeconds = 40;
 let timer;
 let gameOver = false;
 
@@ -57,7 +57,7 @@ function checkMatch() {
             clearInterval(timer);
             document.getElementById('message').style.display = 'block';
             document.getElementById('message').innerHTML = '<h3>Congratulations! You have completed the puzzle!</h3>';
-            document.getElementById('points').textContent = `Points: 16`;
+            document.getElementById('points').innerHTML = `<h3>Points: 16</h3>`;
             document.getElementById('startBtnContainer').style.display = 'block';
             return;
         }
@@ -91,7 +91,8 @@ function startTimer() {
             clearInterval(timer);
             gameOver = true;
             document.getElementById('message').style.display = 'block';
-            document.getElementById('points').textContent = `Points: ${points}`;
+            document.getElementById('message').innerHTML = `<h3>Sorry! Times up!</h3>`;
+            document.getElementById('points').textContent = `<h3>Points: ${points}</h3>`;
             return;
         } else {
             updateTimerDisplay(timeLeft);
