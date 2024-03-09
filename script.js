@@ -4,9 +4,11 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 10;
+const timeLimitSeconds = 120;
+let remainingTime;
 let timer;
 let gameOver = false;
+let isPaused = false;
 
 const cards = document.querySelectorAll('.card');
 const colors = ['red', 'green', 'yellow', 'blue', 'brown', 'skyblue', 'violet', 'orange'];
@@ -21,7 +23,6 @@ function shuffle(array) {
 
 function setColors() {
     const shuffledColors = shuffle(colors.concat(colors));
-    const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
         card.classList.remove('hidden');
         card.classList.remove(...colors);
@@ -34,7 +35,7 @@ function setColors() {
 }
 
 function flipCard() {
-    if (!canClick || gameOver) return;
+    if (!canClick || gameOver || isPaused) return;
     if (this === firstCard) return;
 
     this.classList.remove('hidden');
@@ -53,13 +54,11 @@ function checkMatch() {
 
     if (firstCard.className === secondCard.className) {
         points += 2;
+        updatePoints();
         if (points === maxPoints) {
             gameOver = true;
-            clearInterval(timer);
-            document.getElementById('message').style.display = 'block';
-            document.getElementById('message').innerHTML = `<h3>Congratulations! You have completed the puzzle</h3>`;
-            document.getElementById('points').innerHTML = `<h3>Points: 16</h3>`;
-            resetGame();
+            isPaused = true;
+            showGameOverMessage('Congratulations! You have completed the puzzle');
             return;
         }
         setTimeout(() => {
@@ -76,7 +75,6 @@ function checkMatch() {
     }
 }
 
-
 function resetCards() {
     firstCard = null;
     secondCard = null;
@@ -85,35 +83,72 @@ function resetCards() {
 
 function startTimer() {
     let timeLeft = timeLimitSeconds;
+    if (isPaused === true && typeof remainingTime !== 'undefined') {
+        timeLeft = remainingTime;
+    } else {
+        remainingTime = timeLeft;
+    }
     updateTimerDisplay(timeLeft);
     timer = setInterval(() => {
-        timeLeft--;
-        if (timeLeft < 0) {
-            clearInterval(timer);
-            gameOver = true;
-            document.getElementById('message').style.display = 'block';
-            document.getElementById('message').innerHTML = `<h3>Sorry! Times up!</h3>`;
-            document.getElementById('points').textContent = `Points: ${points}`;
-            return;
-        } else {
+        if (!isPaused) {
+            timeLeft--;
+            if (timeLeft < 0) {
+                clearInterval(timer);
+                gameOver = true;
+                showGameOverMessage("Sorry! Time's up!");
+                return;
+            }
             updateTimerDisplay(timeLeft);
         }
     }, 1000);
 }
 
+function showGameOverMessage(message) {
+    document.getElementById('message').style.display = 'block';
+    document.getElementById('message').innerHTML = `<h3>${message}</h3>`;
+    document.getElementById('restartBtn').style.display = 'block';
+    document.getElementById('pauseBtn').style.display = 'none';
+    document.getElementById('continueBtn').style.display = 'none';
+}
+
 function resetGame() {
     points = 0;
     setColors();
-    document.getElementById('points').textContent = `Points: ${points}`;
+    updatePoints();
     document.getElementById('message').style.display = 'none';
-    document.getElementById('startBtnContainer').style.display = 'none';
+    document.getElementById('restartBtn').style.display = 'none';
     clearInterval(timer);
     gameOver = false;
+    isPaused = false;
     startTimer();
 }
 
-function restartGame() {
-    window.location.reload();
+function pauseGame() {
+
+    isPaused = true;
+    remainingTime = getTimeLeft();
+    document.getElementById('pauseBtn').textContent = 'Continue';
+    clearInterval(timer);
+    cards.forEach(card => card.removeEventListener('click', flipCard));
+
+}
+function Continue() {
+    isPaused = false;
+    document.getElementById('continueBtn').textContent = 'Pause';
+    document.getElementById('pauseBtn').style.display = 'block';
+    // document.getElementById('continueBtn').style.display = 'none';
+    startTimer();
+    cards.forEach(card => card.addEventListener('click', flipCard));
+}
+
+function getTimeLeft() {
+    const timerText = document.getElementById('timer').textContent;
+    const [minutes, seconds] = timerText.split(':').map(Number);
+    return minutes * 60 + seconds;
+}
+
+function updatePoints() {
+    document.getElementById('points').textContent = `Points: ${points}`;
 }
 
 function updateTimerDisplay(timeLeft) {
@@ -127,11 +162,15 @@ function startGame() {
     resetGame();
     cards.forEach(card => card.addEventListener('click', flipCard));
     document.getElementById('startBtn').style.display = 'none';
+    document.getElementById('pauseBtn').style.display = 'block';
     canClick = true;
-    startTimer();
 }
-
 
 window.addEventListener('load', () => {
     document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('pauseBtn').addEventListener('click', pauseGame);
+    document.getElementById('continueBtn').addEventListener('click', Continue);
 });
+
+
+
