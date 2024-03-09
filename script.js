@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 60;
+const timeLimitSeconds = 10;
 let timer;
 let gameOver = false;
 
@@ -27,6 +27,7 @@ function setColors() {
         card.classList.remove(...colors);
         card.classList.add(shuffledColors[index]);
     });
+
     setTimeout(() => {
         cards.forEach(card => card.classList.add('hidden'));
     }, 0);
@@ -58,10 +59,6 @@ function checkMatch() {
             document.getElementById('message').style.display = 'block';
             document.getElementById('message').innerHTML = `<h3>Congratulations! You have completed the puzzle</h3>`;
             document.getElementById('points').innerHTML = `<h3>Points: 16</h3>`;
-
-            document.getElementById('points').innerHTML = `Points: 16`;
-
-            document.getElementById('startBtnContainer').style.display = 'block';
             resetGame();
             return;
         }
@@ -96,7 +93,7 @@ function startTimer() {
             gameOver = true;
             document.getElementById('message').style.display = 'block';
             document.getElementById('message').innerHTML = `<h3>Sorry! Times up!</h3>`;
-            document.getElementById('points').textContent = `<h3>Points: ${points}</h3>`;
+            document.getElementById('points').textContent = `Points: ${points}`;
             return;
         } else {
             updateTimerDisplay(timeLeft);

@@ -11,9 +11,7 @@
     cursor: pointer;
 }
 
-.card:hover {
-    border: 2px black solid;
-}
+
 
 .red {
     background-color: red;
