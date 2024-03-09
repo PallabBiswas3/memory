@@ -5,7 +5,7 @@ let canClick = true;
 let points = 0;
 const maxPoints = 16;
 const timeLimitSeconds = 120;
-let remainingTime;
+let remainingTime = 0;
 let timer;
 let gameOver = false;
 let isPaused = false;
@@ -83,7 +83,7 @@ function resetCards() {
 
 function startTimer() {
     let timeLeft = timeLimitSeconds;
-    if (isPaused === true && typeof remainingTime !== 'undefined') {
+    if (isPaused === true && remainingTime !== 0) {
         timeLeft = remainingTime;
     } else {
         remainingTime = timeLeft;
