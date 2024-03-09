@@ -4,7 +4,7 @@ let canClick = true;
 
 let points = 0;
 const maxPoints = 16;
-const timeLimitSeconds = 120;
+const timeLimitSeconds = 60;
 let remainingTime = 0;
 let timer;
 let gameOver = false;
@@ -81,12 +81,17 @@ function resetCards() {
     canClick = true;
 }
 
-function startTimer() {
+function startTimer(timeLimitSeconds) {
     let timeLeft = timeLimitSeconds;
+
     if (isPaused === true && remainingTime !== 0) {
         timeLeft = remainingTime;
     } else {
-        remainingTime = timeLeft;
+        if (remainingTime === 0) {
+            timeLeft = timeLimitSeconds;
+        } else {
+            remainingTime = timeLeft;
+        }
     }
     updateTimerDisplay(timeLeft);
     timer = setInterval(() => {
@@ -120,24 +125,31 @@ function resetGame() {
     clearInterval(timer);
     gameOver = false;
     isPaused = false;
-    startTimer();
+    startTimer(timeLimitSeconds);
+}
+
+function restartGame() {
+    resetGame();
+    cards.forEach(card => card.addEventListener('click', flipCard));
+    document.getElementById('startBtn').style.display = 'none';
+    document.getElementById('pauseBtn').style.display = 'block';
+    canClick = true;
 }
 
 function pauseGame() {
-
     isPaused = true;
     remainingTime = getTimeLeft();
     document.getElementById('pauseBtn').style.display = 'none';
     document.getElementById('continueBtn').style.display = 'block';
     clearInterval(timer);
     cards.forEach(card => card.removeEventListener('click', flipCard));
-
 }
+
 function Continue() {
     isPaused = false;
     document.getElementById('continueBtn').style.display = 'none';
     document.getElementById('pauseBtn').style.display = 'block';
-    startTimer();
+    startTimer(remainingTime);
     cards.forEach(card => card.addEventListener('click', flipCard));
 }
 
@@ -170,7 +182,10 @@ window.addEventListener('load', () => {
     document.getElementById('startBtn').addEventListener('click', startGame);
     document.getElementById('pauseBtn').addEventListener('click', pauseGame);
     document.getElementById('continueBtn').addEventListener('click', Continue);
+    document.getElementById('restartBtn').addEventListener('click', restartGame); // Add event listener for restart
 });
+
+
 
 
 
