@@ -136,7 +136,7 @@ function Continue() {
     isPaused = false;
     document.getElementById('continueBtn').textContent = 'Pause';
     document.getElementById('pauseBtn').style.display = 'block';
-    // document.getElementById('continueBtn').style.display = 'none';
+    document.getElementById('continueBtn').style.display = 'none';
     startTimer();
     cards.forEach(card => card.addEventListener('click', flipCard));
 }
