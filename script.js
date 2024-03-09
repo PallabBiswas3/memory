@@ -127,16 +127,16 @@ function pauseGame() {
 
     isPaused = true;
     remainingTime = getTimeLeft();
-    document.getElementById('pauseBtn').textContent = 'Continue';
+    document.getElementById('pauseBtn').style.display = 'none';
+    document.getElementById('continueBtn').style.display = 'block';
     clearInterval(timer);
     cards.forEach(card => card.removeEventListener('click', flipCard));
 
 }
 function Continue() {
     isPaused = false;
-    document.getElementById('continueBtn').textContent = 'Pause';
-    document.getElementById('pauseBtn').style.display = 'block';
     document.getElementById('continueBtn').style.display = 'none';
+    document.getElementById('pauseBtn').style.display = 'block';
     startTimer();
     cards.forEach(card => card.addEventListener('click', flipCard));
 }
